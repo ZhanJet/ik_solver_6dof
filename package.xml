@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>ik_sovler_6dof</name>
+  <name>ik_solver_6dof</name>
   <version>0.0.0</version>
-  <description>The ik_sovler_6dof package</description>
+  <description>The ik_solver_6dof package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/ik_sovler_6dof</url> -->
+  <!-- <url type="website">http://wiki.ros.org/ik_solver_6dof</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -50,15 +50,19 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>orocos_kdl</build_depend>
+  <build_depend>kdl_parser</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_export_depend>orocos_kdl</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>kdl_parser</build_export_depend>
   <exec_depend>orocos_kdl</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
+  <exec_depend>kdl_parser</exec_depend>
 
+  <test_depend>gtest</test_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

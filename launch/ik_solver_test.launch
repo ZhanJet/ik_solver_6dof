@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+     <param name="robot_description" command="$(find xacro)/xacro '$(find moying_mcr_description)/urdf/M300_E5_FT300_R2F140.urdf.xacro' --inorder simulation:=true"/>
+     
+     <node name="ik_solver_test" pkg="ik_solver_6dof" type="ik_solver_6dof-test" 
+          output="screen" launch-prefix="gdb -ex run --args">
+          <param name="base_link" value="elfin_base_link"/>
+          <param name="tip_link" value="elfin_end_link"/>
+          <param name="test_case_string" value="singlePoseTest"/>
+     </node>
+
+</launch>
