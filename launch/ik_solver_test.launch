@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-     <param name="robot_description" command="$(find xacro)/xacro '$(find moying_mcr_description)/urdf/M300_E5_FT300_R2F140.urdf.xacro' --inorder simulation:=true"/>
-     
+     <!-- <include file="$(find ik_solver_test)/launch/load_robot.launch" /> -->
+     <include file="$(find elfin_description)/launch/display.launch" >
+          <arg name="model" value="elfin5"/>
+          <arg name="gui" value="false"/>
+     </include>
+
      <node name="ik_solver_test" pkg="ik_solver_6dof" type="ik_solver_6dof-test" 
           output="screen" launch-prefix="gdb -ex run --args">
           <param name="base_link" value="elfin_base_link"/>

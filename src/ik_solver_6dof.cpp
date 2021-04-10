@@ -167,6 +167,8 @@ int IkSolverPos_6DOF::ik_solve(const Frame& desired_pose, std::vector<std::vecto
     double q2[2]={0};
     q2[0] = atan2(a, b) + acos(div);
     q2[1] = atan2(a, b) - acos(div);
+    if(q2[0] > PI)  q2[0] -= 2*PI;
+    if(q2[1] < -PI)  q2[1] += 2*PI;
     int num_q2 = 2;
     if(q2[0] == q2[1])  num_q2 = 1;
     for(int i=0; i<num_q2; i++){

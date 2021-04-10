@@ -69,6 +69,8 @@ public:
 
     void enableVelLimits(const JntArray& max_qdot, const double ctrl_period);
     void disableVelLimits(){is_qdot_limit_ = false;}
+    JntArray getMaxq(){return max_q_;}
+	JntArray getMinq(){return min_q_;}
 
 private:
     int ik_solve(const Frame& desired_pose, std::vector<std::vector<double> >& q_ik_solns);
