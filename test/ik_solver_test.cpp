@@ -22,7 +22,7 @@ protected:
     IkSolverPos_6DOF* ik_solver;
     ChainFkSolverPos_recursive* fk_solver;
 
-    // Chain robot_chain;
+    Chain kdl_chain;
 };
 
 IKSolverTest::IKSolverTest(){
@@ -49,53 +49,57 @@ IKSolverTest::IKSolverTest(){
     ik_solver->enableVelLimits(max_qdot, ctrl_period);
 
     //construct robot chain
-    Chain kdl_chain;
-    // Tree kdl_tree;
-    // ros::NodeHandle nh("~");
-    // std::string robot_description, base_link, tip_link;
-    // // ros::param::param("robot_description", robot_desc_string, std::string());
-    // ros::param::param<std::string>("robot_description", robot_description, "robot_description");
-    // nh.param<std::string>("base_link", base_link, "base_link");
-    // nh.param<std::string>("tip_link", tip_link, "tip_link");
-    // if(!kdl_parser::treeFromString(robot_description, kdl_tree)){
-    //     ROS_ERROR("Failed to construct kdl tree object");
-    // }
+    // Chain kdl_chain;
+    Tree kdl_tree;
+    ros::NodeHandle nh("~");
+    std::string robot_description, base_link, tip_link;
+    // ros::param::param("robot_description", robot_desc_string, std::string());
+    ros::param::param<std::string>("robot_description", robot_description, "robot_description");
+    nh.param<std::string>("base_link", base_link, "base_link");
+    nh.param<std::string>("tip_link", tip_link, "tip_link");
+    if(!kdl_parser::treeFromString(robot_description, kdl_tree)){
+        ROS_ERROR("Failed to construct kdl tree object");
+    }
+    if(!kdl_tree.getChain(base_link, tip_link, kdl_chain)){
+        ROS_ERROR("Failed to construct kdl chain object");
+    }
 
-    // // cout<<"base_link = "<<base_link<<endl;
-    // // cout<<"tip_link = "<<tip_link<<endl;
-    // if(!kdl_tree.getChain(base_link, tip_link, kdl_chain)){
-    //     ROS_ERROR("Failed to construct kdl chain object");
-    // }
-    kdl_chain = make_kdl_chain(dh_param);
+    // kdl_chain = make_kdl_chain(dh_param);
+    // JntArray q_in(6);
+    // if(q_in.rows()!=kdl_chain.getNrOfJoints())
+    //     cout<<"Input size does not match internal state"<<endl;
 
     fk_solver = new ChainFkSolverPos_recursive(kdl_chain);
 }
 
-IKSolverTest::~IKSolverTest(){
-}
+IKSolverTest::~IKSolverTest(){}
 
 TEST_F(IKSolverTest, singlePoseTest){
 	JntArray q_in(6);
 	JntArray q_out(6);
 	Frame pose_out;
 
-	// q_in.data << 0, 30, 30, 0, 60, 30;
-	// q_in.data *= deg2rad;
-    q_in.data << 0.7, 0.5, 0.95, 0.7, 0.93, -0.7;
+	q_in.data << 0, 30, 30, 0, 60, 30;
+	q_in.data *= deg2rad;
+    // q_in.data << 0.7, 0.5, 0.95, 0.7, 0.93, -0.7;
 
 	cout<<"q_in = "<<q_in(0)*rad2deg<<", "<<q_in(1)*rad2deg<<", "<<q_in(2)*rad2deg<<", "
 			<<q_in(3)*rad2deg<<", "<<q_in(4)*rad2deg<<", "<<q_in(5)*rad2deg <<endl;
-	fk_solver->JntToCart(q_in, pose_out);
+	int fk_res = fk_solver->JntToCart(q_in, pose_out);
+    if(res){
+        cout<<"fk_res = "<<fk_res<<endl;
+		cout<<"FKSolver Failed!"<<endl;
+	}
 
-    geometry_msgs::TransformStamped pose_out_msg;
-    pose_out_msg.transform.translation.x = 0.053;
-    pose_out_msg.transform.translation.y = 0.166;
-    pose_out_msg.transform.translation.z = 0.979;
-    pose_out_msg.transform.rotation.x = -0.449;
-    pose_out_msg.transform.rotation.y = 0.406;
-    pose_out_msg.transform.rotation.z = 0.333;
-    pose_out_msg.transform.rotation.w = 0.723;
-    pose_out = tf2::transformToKDL(pose_out_msg);
+    // geometry_msgs::TransformStamped pose_out_msg;
+    // pose_out_msg.transform.translation.x = 0.053;
+    // pose_out_msg.transform.translation.y = 0.166;
+    // pose_out_msg.transform.translation.z = 0.979;
+    // pose_out_msg.transform.rotation.x = -0.449;
+    // pose_out_msg.transform.rotation.y = 0.406;
+    // pose_out_msg.transform.rotation.z = 0.333;
+    // pose_out_msg.transform.rotation.w = 0.723;
+    // pose_out = tf2::transformToKDL(pose_out_msg);
 	// pose_out = Frame(Rotation(  -0.97824,   -0.200676,   0.0526803,
     //                             0.202208,    -0.97901,   0.0255248,
     //                             0.0464523,   0.0356218,    0.998285),
@@ -105,7 +109,7 @@ TEST_F(IKSolverTest, singlePoseTest){
 
 	int res = ik_solver->CartToJnt(q_in, pose_out, q_out);
 	if(res){
-        cout<<"res = "<<res<<endl;
+        cout<<"ik_res = "<<res<<endl;
 		cout<<"IKSolver Failed!"<<endl;
 	}
 	cout<<endl<<"q_out = "<<q_out(0)*rad2deg<<", "<<q_out(1)*rad2deg<<", "<<q_out(2)*rad2deg<<", "
@@ -137,6 +141,6 @@ int main(int argc, char** argv) {
     nh.param<std::string>("test_case_string", test_string, "singlePoseTest");
     test_string.append("*");
     // ::testing::GTEST_FLAG(filter) = "singlePoseTest*";
-    // ::testing::GTEST_FLAG(filter) = test_string;
+    ::testing::GTEST_FLAG(filter) = test_string;
     return RUN_ALL_TESTS();
 }

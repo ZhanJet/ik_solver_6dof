@@ -67,7 +67,7 @@ int IkSolverPos_6DOF::CartToJnt(const JntArray& q_init, const Frame& p_in, JntAr
         return -2;
     } else if(solns_num == 1){
         //when solutions have been filtered to one through config_data
-        for(int i=1; i<6; i++){
+        for(int i=0; i<6; i++){
             q_nearest(i) = q_solns[0][i];
         }
     } else {
@@ -85,12 +85,12 @@ int IkSolverPos_6DOF::CartToJnt(const JntArray& q_init, const Frame& p_in, JntAr
             if(length[i] < length[index])
                 index = i;
         }
-        for(int i=1; i<6; i++){
+        for(int i=0; i<6; i++){
             q_nearest(i) = q_solns[index][i];
         }
     }
     ///> Transform q_soln back to inital range
-    for(int i=1; i<6; i++){
+    for(int i=0; i<6; i++){
         q_out(i) = q_nearest(i) + jnt_range_index[i]*2*PI;
     }
     ///> Check whether the solution is within the allowable range
@@ -194,7 +194,7 @@ int IkSolverPos_6DOF::ik_solve(const Frame& desired_pose, std::vector<std::vecto
         /****** compute q4 ******/
         double q4 = atan2(sign(q5) * R36(1,2), sign(q5) * R36(0,2));
         /****** compute q6 ******/
-        double q6 = atan2(sign(q5) * R36(2,1), sign(q5) * R36(2,0));
+        double q6 = atan2(sign(q5) * R36(2,1), -sign(q5) * R36(2,0));
 
         //save the solution
         std::vector<double> q_group = {q1, q2[i], q3, q4, q5, q6};
