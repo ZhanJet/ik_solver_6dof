@@ -138,11 +138,11 @@ TEST_F(IKSolverTest, LargePoseTest){
 	int error_num = 0;
 	double precision = 1e-4;
 	for(int i = 1; i < test_num; i++){
-		//生成随机角度
+		//generate random angles
 		for(unsigned int j = 0; j < 6; j++){
 			q_in(j) = gen_rand_angle(int(ik_solver->getMinq()(j)*rad2deg), int(ik_solver->getMaxq()(j)*rad2deg), precision) * deg2rad;
 		}
-		//避开奇异区
+		//avoid singularity range
 		double distance = 1.0 * deg2rad;
 		if(fabs(q_in(2) < distance)){
 			q_in(2) = sign(q_in(2)) * distance;
@@ -245,15 +245,15 @@ TEST_F(IKSolverTest, successiveTrajTest){
 		if(traj_flag == 0){
 			pose_target.p += Vel / rate;
 		} else if(traj_flag == 1){
-			//XY平面画圆
+			//circle in XY-plane
 			// pose_target.p[0] += -R*sin(theta)*omega/rate;
 			// pose_target.p[1] += R*cos(theta)*omega/rate;
 			// pose_target.p[2] += 0;
-			//YZ平面画圆
+			//circle in YZ-plane
 			// pose_target.p[0] += 0;
 			// pose_target.p[1] += R*cos(theta)*omega/rate;
 			// pose_target.p[2] += -R*sin(theta)*omega/rate;
-            //XZ平面画圆
+            //circle in XZ-plane
 			pose_target.p[0] += R*cos(theta)*omega/rate;
 			pose_target.p[1] += 0;
 			pose_target.p[2] += -R*sin(theta)*omega/rate;
@@ -293,8 +293,7 @@ TEST_F(IKSolverTest, successiveTrajTest){
 			cout<<"q_out = "<<q_out(0)*rad2deg<<", "<<q_out(1)*rad2deg<<", "<<q_out(2)*rad2deg<<", "
 					<<q_out(3)*rad2deg<<", "<<q_out(4)*rad2deg<<", "<<q_out(5)*rad2deg <<endl;
 
-//			cout<<"p_error = "<<endl<<pose_target.p-pose_out.p<<endl;
-		}        
+		}
         ros::spinOnce();
 		loop_rate.sleep();
 	}
@@ -311,6 +310,6 @@ int main(int argc, char** argv) {
     nh.param<std::string>("test_case_string", test_string, "singlePoseTest");
     test_string.append("*");
     // ::testing::GTEST_FLAG(filter) = "singlePoseTest*";
-    // ::testing::GTEST_FLAG(filter) = test_string;
+    ::testing::GTEST_FLAG(filter) = test_string;
     return RUN_ALL_TESTS();
 }
