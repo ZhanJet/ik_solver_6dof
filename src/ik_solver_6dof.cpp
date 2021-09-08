@@ -1,4 +1,4 @@
-//  Copyright (c) 2021, Zhangjie Tu.
+//  Copyright (c) 2021, Zhangjie Tu, zhjtu@buaa.edu.cn
 //  All rights reserved.
 //   @author zhanjet
 
@@ -37,7 +37,7 @@ IkSolverPos_6DOF::IkSolverPos_6DOF(const DH_Params& dh_param, JntArray min_q, Jn
 IkSolverPos_6DOF::~IkSolverPos_6DOF(){}
 
 int IkSolverPos_6DOF::CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out){
-    if(q_init.rows() != 6){
+    if(q_init.rows() != 6 or q_out.rows() != 6){
         return -1;
     }
 
