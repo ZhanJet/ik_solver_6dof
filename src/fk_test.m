@@ -22,10 +22,10 @@ links = [
          ];
 
 elfin5=SerialLink(links, 'name', 'elfin5');
-elfin5.plot([0 -90 -90 0 0 0]*d2r);
+elfin5.plot([0 -90 -90 0 0 0]*d2r);         
 % elfin5.teach('callback',@(r,q) r.vellipse(q));
 
 % qz = [0 -pi/2 -pi/2 0 0 0];
 % qz = [0 0];
 % elfin5.plot(qz)
-% elfin5.fkine(qz)
+% elfin5.fkine(qz)ex
