@@ -129,8 +129,8 @@ TEST_F(IKSolverTest, singlePoseTest){
 	EXPECT_TRUE(Equal(q_in, q_out, 1e-6));
 }
 
-TEST_F(IKSolverTest, LargePoseTest){
-    JntArray q_in(6);
+TEST_F(IKSolverTest, LargeScaleTest){
+  JntArray q_in(6);
 	JntArray q_out(6);
 	Frame pose_out;
 
@@ -181,7 +181,7 @@ TEST_F(IKSolverTest, LargePoseTest){
 }
 
 TEST_F(IKSolverTest, successiveTrajTest){
-    JntArray q_in(6);
+  JntArray q_in(6);
 	JntArray q_out(6);
 	Frame pose_out, pose_target;
 
@@ -294,7 +294,7 @@ TEST_F(IKSolverTest, successiveTrajTest){
 					<<q_out(3)*rad2deg<<", "<<q_out(4)*rad2deg<<", "<<q_out(5)*rad2deg <<endl;
 
 		}
-        ros::spinOnce();
+    ros::spinOnce();
 		loop_rate.sleep();
 	}
 
@@ -308,8 +308,10 @@ int main(int argc, char** argv) {
     ros::NodeHandle nh("~");
     std::string test_string;
     nh.param<std::string>("test_case_string", test_string, "singlePoseTest");
+    test_string.insert(test_string.begin(), '*');
     test_string.append("*");
-    // ::testing::GTEST_FLAG(filter) = "singlePoseTest*";
+    std::cout<<"gtest example is "<<test_string<<std::endl;
     ::testing::GTEST_FLAG(filter) = test_string;
+    //::testing::GTEST_FLAG(filter) = "*singlePoseTest*";
     return RUN_ALL_TESTS();
 }

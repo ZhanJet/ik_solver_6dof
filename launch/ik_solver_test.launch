@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
+     <arg name="test_case" default="singlePoseTest"/>
      <!-- <include file="$(find ik_solver_test)/launch/load_robot.launch" /> -->
      <include file="$(find elfin_description)/launch/display.launch" >
           <arg name="model" value="elfin5"/>
@@ -10,7 +11,7 @@
           output="screen" launch-prefix="gdb -ex run --args">
           <param name="base_link" value="elfin_base_link"/>
           <param name="tip_link" value="elfin_end_link"/>
-          <param name="test_case_string" value="singlePoseTest"/>
+          <param name="test_case_string" value="$(arg test_case)"/>
      </node>
 
 </launch>
