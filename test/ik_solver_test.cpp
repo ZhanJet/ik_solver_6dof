@@ -208,24 +208,24 @@ TEST_F(IKSolverTest, successiveTrajTest){
 
 	///>publish ROS topic
 	ros::NodeHandle nh;
-    ros::Publisher jnt_cmd_pub = nh.advertise<control_msgs::FollowJointTrajectoryActionGoal>(
-                                    "arm/elfin_arm_controller/follow_joint_trajectory/goal",5);
+	ros::Publisher jnt_cmd_pub = nh.advertise<control_msgs::FollowJointTrajectoryActionGoal>(
+																	"arm/elfin_arm_controller/follow_joint_trajectory/goal",5);
 
-    control_msgs::FollowJointTrajectoryActionGoal traj;
-    traj.goal.trajectory.header.frame_id = "elfin_base_link";
-    traj.goal.trajectory.joint_names.resize(6);
-    traj.goal.trajectory.points.resize(1);
-    traj.goal.trajectory.points[0].positions.resize(6);
+	control_msgs::FollowJointTrajectoryActionGoal traj;
+	traj.goal.trajectory.header.frame_id = "elfin_base_link";
+	traj.goal.trajectory.joint_names.resize(6);
+	traj.goal.trajectory.points.resize(1);
+	traj.goal.trajectory.points[0].positions.resize(6);
 
-    traj.goal.trajectory.joint_names[0] = "elfin_joint1";
-    traj.goal.trajectory.joint_names[1] = "elfin_joint2";
-    traj.goal.trajectory.joint_names[2] = "elfin_joint3";
-    traj.goal.trajectory.joint_names[3] = "elfin_joint4";
-    traj.goal.trajectory.joint_names[4] = "elfin_joint5";
-    traj.goal.trajectory.joint_names[5] = "elfin_joint6";
+	traj.goal.trajectory.joint_names[0] = "elfin_joint1";
+	traj.goal.trajectory.joint_names[1] = "elfin_joint2";
+	traj.goal.trajectory.joint_names[2] = "elfin_joint3";
+	traj.goal.trajectory.joint_names[3] = "elfin_joint4";
+	traj.goal.trajectory.joint_names[4] = "elfin_joint5";
+	traj.goal.trajectory.joint_names[5] = "elfin_joint6";
 
-    ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("/joint_states", 1);
-    sensor_msgs::JointState joint_state;
+	ros::Publisher joint_state_pub = nh.advertise<sensor_msgs::JointState>("/joint_states", 1);
+	sensor_msgs::JointState joint_state;
 	joint_state.position.resize(6);
 	joint_state.velocity.resize(6);
 	joint_state.effort.resize(6);
@@ -274,17 +274,17 @@ TEST_F(IKSolverTest, successiveTrajTest){
         traj.goal.trajectory.points[0].time_from_start = ros::Duration(1/rate);
 		jnt_cmd_pub.publish(traj);
 
-        for(unsigned int i = 0; i < 7; i++){
+    for(unsigned int i = 0; i < 7; i++){
 			joint_state.position[i] = q_out(i);
 		}
 		joint_state.header.stamp = ros::Time::now();
 		joint_state_pub.publish(joint_state);
 
-        JntArray q_init(6);
-        if(Equal(q_out, q_init, 1e-2)){
-            cout<<"IKSolver failed!"<<endl;
-            ros::shutdown();
-        }
+		JntArray q_init(6);
+		if(Equal(q_out, q_init, 1e-2)){
+				cout<<"IKSolver failed!"<<endl;
+				ros::shutdown();
+		}
 
 		count++;
 		if(count%1 == 0){

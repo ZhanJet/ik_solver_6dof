@@ -66,12 +66,12 @@ int IkSolverPos_6DOF::CartToJnt(const JntArray& q_init, const Frame& p_in, JntAr
     if(solns_num <= 0){
         return -2;
     } else if(solns_num == 1){
-        //when solutions have been filtered to one through config_data
+        //when solutions have been filtered to one group through config_data
         for(int i=0; i<6; i++){
             q_nearest(i) = q_solns[0][i];
         }
     } else {
-        //when solutions have been filtered to 2 through config_data
+        //when solutions have been filtered to 2 groups through config_data
         // or get all the 8 groups of solution without pre-selection.
         double distance;
         double length[8]={0};
@@ -99,12 +99,12 @@ int IkSolverPos_6DOF::CartToJnt(const JntArray& q_init, const Frame& p_in, JntAr
             double allowable_range = max_qdot_(i)*ctrl_period_;
             double q_l = max(q_init(i)-allowable_range, min_q_(i));
             double q_u = min(q_init(i)+allowable_range, max_q_(i));
-            if((q_out(i) < q_l-EPSILON) or (q_out(i) > q_u+EPSILON))
+            if((q_out(i) < q_l+EPSILON) or (q_out(i) > q_u-EPSILON))
                 return -3;
         }
     } else {
         for(int i=0; i<6; i++){
-            if((q_out(i) < min_q_(i)-EPSILON) or (q_out(i) > max_q_(i)+EPSILON))
+            if((q_out(i) < min_q_(i)+EPSILON) or (q_out(i) > max_q_(i)-EPSILON))
                 return -3;
         }
     }
